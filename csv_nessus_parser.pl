@@ -1,9 +1,5 @@
 use Parse::CSV;
 
-my @files = (
-	####################### ADD MORE CSV NESSUS FILES
-);
-
 my $master = {};
 my @grouping = (
 				["tomcat"],
@@ -19,11 +15,22 @@ my @grouping = (
 				["openssh"]
 );
 
-foreach my $file (@files){
+
+my $directory = 'input';
+
+opendir (DIR, $directory) or die $!;
+
+while (my $file = readdir(DIR)) {
+	next if ($file =~ m/^\./);
+
+	$file = $directory."/".$file;
 	load_file($file,$master);
+
 }
 
 output($master);
+
+closedir(DIR);
 
 sub load_file {
 	my ($file,$master) = @_;
